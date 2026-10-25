@@ -1,0 +1,29 @@
+{
+  "name": "bustracker-backend",
+  "version": "2.0.0",
+  "description": "API BusTracker : suivi des bus à Maurice (Express + PostgreSQL/PostGIS)",
+  "main": "src/server.js",
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "db:migrate": "node scripts/migrate.js",
+    "db:seed": "node scripts/seed.js",
+    "db:import-stops": "node scripts/import-osm-stops.js",
+    "test": "NODE_ENV=test node --test test/*.test.js",
+    "test:unit": "NODE_ENV=test node --test test/unit.test.js"
+  },
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "cors": "^2.8.6",
+    "dotenv": "^18.0.7",
+    "express": "^5.3.0",
+    "express-rate-limit": "^8.7.1",
+    "helmet": "^8.3.0",
+    "jsonwebtoken": "^9.0.3",
+    "pg": "^8.23.1"
+  },
+  "devDependencies": {
+    "supertest": "^7.3.1"
+  }
+}

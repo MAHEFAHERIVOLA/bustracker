@@ -1,0 +1,37 @@
+# Lance PostgreSQL+PostGIS (et optionnellement l'API) :
+#   docker compose up -d db          -> seulement la base (tu lances l'API avec `npm run dev`)
+#   docker compose up -d --build     -> base + API
+services:
+  db:
+    image: postgis/postgis:16-3.4
+    environment:
+      POSTGRES_USER: bustracker
+      POSTGRES_PASSWORD: bustracker
+      POSTGRES_DB: bustracker
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U bustracker -d bustracker"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  api:
+    build: .
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      NODE_ENV: development
+      PORT: 3000
+      DATABASE_URL: postgres://bustracker:bustracker@db:5432/bustracker
+      JWT_SECRET: dev-only-secret-change-me-please
+    ports:
+      - "3000:3000"
+    # applique les migrations puis démarre l'API
+    command: sh -c "node scripts/migrate.js && node src/server.js"
+
+volumes:
+  pgdata:
